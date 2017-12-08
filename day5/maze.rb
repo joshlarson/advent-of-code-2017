@@ -64,3 +64,9 @@ end
 def escape_time(input)
   escape_time_helper(input) { |i| i + 1 }
 end
+
+def wacky_escape_time(input)
+  escape_time_helper(input) do |i|
+    i >= 3 ? i - 1 : i + 1
+  end
+end

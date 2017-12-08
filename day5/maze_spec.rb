@@ -38,3 +38,14 @@ describe :escape_time do
     end
   end
 end
+
+describe :wacky_escape_time do
+  [
+    ["0", 2],
+    ["0\n3\n0\n1\n-3", 10],
+  ].each do |input, time|
+    it "'#{input.inspect}' is escaped in #{time} steps" do
+      expect(wacky_escape_time(input)).to eq(time)
+    end
+  end
+end

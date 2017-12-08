@@ -56,3 +56,57 @@ def manhattan_distance(n)
   x, y = coords_of(n)
   abs(x) + abs(y)
 end
+
+module ArraySum
+  refine Array do
+    def sum
+      self.reduce { |sum, n| sum + n }
+    end
+  end
+end
+
+class Grid
+  using ArraySum
+
+  def initialize
+    @cells = {}
+  end
+
+  def cell_at(x, y)
+    (
+      @cells[x] || {}
+    )[y] || 0
+  end
+
+  def set_cell(x, y, i)
+    @cells[x] ||= {}
+    @cells[x][y] = i
+  end
+
+  def sum_around(x, y)
+    span = (-1..1)
+    diffs = span.map { |dx| span.map { |dy| [dx, dy] } }
+      .reduce { |full_list, list| full_list + list }
+      .reject{ |dx, dy| [dx, dy] == [0, 0] }
+      .map { |dx, dy| cell_at(x + dx, y + dy) }
+      .sum
+  end
+end
+
+class StressSpiral
+  include Enumerable
+
+  def each
+    grid = Grid.new
+    grid.set_cell(0, 0, 1)
+    Spiral.new.each do |x, y|
+      sum_around = [x, y] == [0, 0] ? 1 : grid.sum_around(x, y)
+      yield sum_around
+      grid.set_cell(x, y, sum_around)
+    end
+  end
+end
+
+def first_stress_greater_than(n)
+  StressSpiral.new.find { |value| value > n }
+end

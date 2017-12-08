@@ -53,3 +53,15 @@ def find_memory_leak(input)
     result
   end
 end
+
+def memory_leak_size(input)
+  already_seen = {}
+
+  MemoryWalker.new(input.split.map(&:to_i)).each_with_index do |banks, index|
+    if already_seen.include?(banks)
+      return index - already_seen[banks]
+    else
+      already_seen[banks] = index
+    end
+  end
+end

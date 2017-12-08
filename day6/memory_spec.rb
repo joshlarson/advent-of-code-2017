@@ -24,3 +24,9 @@ describe :find_memory_leak do
     expect(find_memory_leak("0 2 7 0")).to eq(5)
   end
 end
+
+describe :memory_leak_size do
+  it "works" do
+    expect(memory_leak_size("0 2 7 0")).to eq(4)
+  end
+end

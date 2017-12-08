@@ -24,10 +24,10 @@ class Maze
     @pointer = pointer
   end
 
-  def step
+  def step(&block)
     instruction = instructions[pointer]
     Maze.new(
-      instructions.replace_at(pointer, instruction + 1),
+      instructions.replace_at(pointer, block.call(instruction)),
       pointer + instruction
     )
   end
@@ -40,7 +40,8 @@ end
 class MazeWalker
   include Enumerable
 
-  def initialize(instructions)
+  def initialize(instructions, &block)
+    @block = block
     @instructions = instructions
   end
 
@@ -48,12 +49,18 @@ class MazeWalker
     maze = Maze.new(@instructions, 0)
     loop do
       yield maze
-      maze = maze.step
+      maze = maze.step(&@block)
     end
   end
 end
 
-def escape_time(input)
+def escape_time_helper(input, &block)
   instructions = input.split("\n").map(&:to_i)
-  MazeWalker.new(instructions).find_index { |maze| !maze.in_maze? }
+  MazeWalker
+    .new(instructions, &block)
+    .find_index { |maze| !maze.in_maze? }
+end
+
+def escape_time(input)
+  escape_time_helper(input) { |i| i + 1 }
 end

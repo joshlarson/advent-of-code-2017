@@ -9,15 +9,15 @@ describe Maze do
   end
 
   it "increments the instruction at the pointer" do
-    maze = Maze.new([0], 0)
+    maze = Maze.new([0], 0).step { |i| i + 1 }
 
-    expect(maze.step.instructions).to eq([1])
+    expect(maze.instructions).to eq([1])
   end
 
   it "moves the pointer based on the instruction" do
-    maze = Maze.new([1], 0)
+    maze = Maze.new([1], 0).step { |i| i + 1 }
 
-    expect(maze.step.pointer).to eq(1)
+    expect(maze.pointer).to eq(1)
   end
 
   it "knows whether the pointer is in the maze" do

@@ -10,36 +10,42 @@ ROTATIONS = {
   DOWN => RIGHT,
 }
 
-class Range
-  def extend_to(c)
-    lower = c < self.first ? c : self.first
-    upper = c > self.last ? c : self.last
-    (lower..upper)
+module RangeExtend
+  refine Range do
+    def extend_to(c)
+      lower = c < self.first ? c : self.first
+      upper = c > self.last ? c : self.last
+      (lower..upper)
+    end
   end
 end
 
-def spiral(n)
-  x = y = 0
-  x_range = y_range = (0..0)
-  direction = RIGHT
+class Spiral
+  include Enumerable
+  using RangeExtend
 
-  (2..n).map do |i|
-    unless y_range.include?(y)
-      y_range = y_range.extend_to(y)
-      direction = ROTATIONS[direction]
+  def each
+    x = y = 0
+    x_range = y_range = (0..0)
+    direction = RIGHT
+
+    loop do |i|
+      unless y_range.include?(y)
+        y_range = y_range.extend_to(y)
+        direction = ROTATIONS[direction]
+      end
+      unless x_range.include?(x)
+        x_range = x_range.extend_to(x)
+        direction = ROTATIONS[direction]
+      end
+      yield x, y
+      x, y = direction[x, y]
     end
-    unless x_range.include?(x)
-      x_range = x_range.extend_to(x)
-      direction = ROTATIONS[direction]
-    end
-    x, y = direction[x, y]
   end
-
-  [x, y]
 end
 
 def coords_of(n)
-  spiral(n)
+  Spiral.new.take(n).last
 end
 
 def abs(n)
@@ -47,6 +53,6 @@ def abs(n)
 end
 
 def manhattan_distance(n)
-  x, y = spiral(n)
+  x, y = coords_of(n)
   abs(x) + abs(y)
 end

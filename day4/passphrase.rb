@@ -13,3 +13,11 @@ end
 def exact_valid_passphrase_count(input)
   valid_passphrase_count(input) { |a, b| a == b }
 end
+
+def anagrams?(a, b)
+  a.chars.sort == b.chars.sort
+end
+
+def anagram_valid_passphrase_count(input)
+  valid_passphrase_count(input) { |a, b| anagrams?(a, b) }
+end

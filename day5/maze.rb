@@ -26,10 +26,9 @@ class Maze
 
   def step(&block)
     instruction = instructions[pointer]
-    Maze.new(
-      instructions.replace_at(pointer, block.call(instruction)),
-      pointer + instruction
-    )
+    instructions[pointer] = block.call(instruction)
+    @pointer = pointer + instruction
+    self
   end
 
   def in_maze?

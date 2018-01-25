@@ -34,3 +34,16 @@ def largest_register(input)
   input.split("\n").each { |line| mem.apply(line) }
   mem.largest_register
 end
+
+def largest_register_ever(input)
+  mem = Memory.new
+  max = 0
+
+  input.split("\n").each do |line|
+    mem.apply(line)
+    current_largest = mem.largest_register || 0
+    max = max > current_largest ? max : current_largest
+  end
+
+  max
+end

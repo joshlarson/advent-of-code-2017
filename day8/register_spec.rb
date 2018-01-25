@@ -64,4 +64,10 @@ c inc -20 if c == 10
       expect(largest_register(input)).to eq(1)
     end
   end
+
+  describe "largest_register_ever" do
+    it "works" do
+      expect(largest_register_ever(input)).to eq(10)
+    end
+  end
 end
